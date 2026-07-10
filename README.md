@@ -45,7 +45,8 @@ require("jj-diff").setup({
 The plugin creates these commands:
 
 - `:JJDiff {revision}`: set the reference revision and refresh attached buffers.
-- `:JJPDiff`: toggle the reference revision between `@-` and `@--`.
+- `:JJDiffIncludeParent`: set the reference revision to `@--`.
+- `:JJDiffExcludeParent`: set the reference revision to `@-`.
 
 `require("jj-diff").source()` returns the source to place first in
 `mini.diff`'s `source` list, so jj repositories take precedence over Git.

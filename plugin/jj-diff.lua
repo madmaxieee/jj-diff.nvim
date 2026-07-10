@@ -26,9 +26,17 @@ vim.api.nvim_create_user_command("JJDiff", function(command)
   end)
 end, { nargs = 1, force = true })
 
-vim.api.nvim_create_user_command("JJPDiff", function()
+vim.api.nvim_create_user_command("JJDiffIncludeParent", function()
   local jj_diff = require("jj-diff")
-  jj_diff.set_base_rev(jj_diff.config.base_rev == "@-" and "@--" or "@-")
+  jj_diff.set_base_rev("@--")
+  vim.notify(
+    ("jj: reference rev is set to '%s'"):format(jj_diff.config.base_rev)
+  )
+end, { nargs = 0, force = true })
+
+vim.api.nvim_create_user_command("JJDiffExcludeParent", function()
+  local jj_diff = require("jj-diff")
+  jj_diff.set_base_rev("@-")
   vim.notify(
     ("jj: reference rev is set to '%s'"):format(jj_diff.config.base_rev)
   )
