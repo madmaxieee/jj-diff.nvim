@@ -16,16 +16,12 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-  "your-name/jj-diff.nvim",
-  dependencies = { "nvim-mini/mini.diff" },
-  opts = {},
-  config = function(_, opts)
-    local jj = require("jj-diff")
-    jj.setup(opts)
-
+  "nvim-mini/mini.diff",
+  dependencies = { "madmaxieee/jj-diff.nvim" },
+  config = function()
     require("mini.diff").setup({
       source = {
-        jj.source(),
+        require("jj-diff").source(),
         require("mini.diff").gen_source.git(),
         require("mini.diff").gen_source.save(),
         require("mini.diff").gen_source.none(),
@@ -36,6 +32,9 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 ```
 
 ## Configuration
+
+No setup call is needed when using the default base revision, `@-`. To use a
+different revision, call `setup()` before configuring `mini.diff`:
 
 ```lua
 require("jj-diff").setup({
@@ -73,6 +72,23 @@ It opens a Jujutsu diff picker using the same `base_rev` and repository root as
 the base plugin. Add [Snacks.nvim](https://github.com/folke/snacks.nvim) as a
 dependency only when using this integration. Caller options override the default
 title, format, preview, and status grouping; the Jujutsu finder is always used.
+
+To use the Jujutsu picker in a jj repository and retain the usual Git status
+picker elsewhere:
+
+```lua
+{
+  "<leader>fg",
+  function()
+    if require("jj-diff").find_root() ~= nil then
+      require("jj-diff.snacks").diff()
+    else
+      require("snacks").picker.git_status()
+    end
+  end,
+  desc = "Git status",
+}
+```
 
 ## License
 
