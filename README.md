@@ -58,11 +58,21 @@ for the base mini.diff source:
 
 ```lua
 require("jj-diff.snacks").diff()
+
+-- Show one entry per changed file.
+require("jj-diff.snacks").status()
+
+-- Pass any additional picker options.
+require("jj-diff.snacks").diff({
+  layout = "select",
+  win = { input = { keys = { ["<C-j>"] = { "list_down", mode = { "i", "n" } } } } },
+})
 ```
 
 It opens a Jujutsu diff picker using the same `base_rev` and repository root as
 the base plugin. Add [Snacks.nvim](https://github.com/folke/snacks.nvim) as a
-dependency only when using this integration.
+dependency only when using this integration. Caller options override the default
+title, format, preview, and status grouping; the Jujutsu finder is always used.
 
 ## License
 

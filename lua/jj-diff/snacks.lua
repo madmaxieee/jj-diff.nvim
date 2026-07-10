@@ -16,6 +16,8 @@ local function jj_diff_finder(opts, ctx)
   ---@type snacks.picker.finder.result
   local finder = Diff.diff(
     ctx:opts({
+      -- Keep picker transforms out of the raw diff parser.
+      transform = false,
       cmd = "jj",
       -- stylua: ignore
       args = {
@@ -46,15 +48,35 @@ local function jj_diff_finder(opts, ctx)
   end
 end
 
----Open a Snacks picker for changes from the configured Jujutsu base revision.
-function M.diff()
+---@param defaults snacks.picker.Config
+---@param opts? snacks.picker.Config
+local function pick(defaults, opts)
   local picker = require("snacks.picker")
-  picker.pick({
+  local config = vim.tbl_deep_extend("force", defaults, opts or {})
+  config.finder = jj_diff_finder
+  picker.pick(config)
+end
+
+---Open a Snacks picker for changes from the configured Jujutsu base revision.
+---@param opts? snacks.picker.Config Extra picker options. `finder` is always Jujutsu's finder.
+function M.diff(opts)
+  pick({
     title = "Jujutsu Diff",
-    finder = jj_diff_finder,
     format = "git_status",
     preview = "diff",
-  })
+  }, opts)
+end
+
+---Open a Snacks status picker for files changed from the configured Jujutsu base revision.
+---@param opts? snacks.picker.Config Extra picker options. `finder` is always Jujutsu's finder.
+function M.status(opts)
+  pick({
+    title = "Jujutsu Status",
+    format = "git_status",
+    preview = "diff",
+    -- imitate snacks' git_status behavior by grouping the diff hunks
+    group = true,
+  }, opts)
 end
 
 return M
