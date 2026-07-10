@@ -4,11 +4,14 @@ Jujutsu (`jj`) source for [mini.diff](https://github.com/nvim-mini/mini.diff).
 It shows a buffer's changes relative to a configurable jj revision and refreshes
 when jj updates the working-copy checkout.
 
+Includes optional [Snacks.nvim](https://github.com/folke/snacks.nvim) picker
+integration for browsing Jujutsu diff hunks and changed files.
+
 ## Requirements
 
-- Neovim 0.10 or newer
 - [mini.diff](https://github.com/nvim-mini/mini.diff)
 - [`jj`](https://github.com/jj-vcs/jj) available in `$PATH`
+- Optional: [Snacks.nvim](https://github.com/folke/snacks.nvim) for picker integration
 
 ## Installation
 
@@ -57,6 +60,7 @@ The optional Snacks integration is loaded separately, so Snacks is not required
 for the base mini.diff source:
 
 ```lua
+-- Show one entry per hunk.
 require("jj-diff.snacks").diff()
 
 -- Show one entry per changed file.
@@ -82,12 +86,12 @@ picker elsewhere:
   "<leader>fg",
   function()
     if require("jj-diff").find_root() ~= nil then
-      require("jj-diff.snacks").diff()
+      require("jj-diff.snacks").status()
     else
       require("snacks").picker.git_status()
     end
   end,
-  desc = "Git status",
+  desc = "JJ or Git status",
 }
 ```
 
